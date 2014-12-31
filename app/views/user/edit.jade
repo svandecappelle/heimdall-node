@@ -1,0 +1,40 @@
+extends ../layout
+block content
+	if session.user.username === objs.user.username
+		.col-md-12
+			.navbar.navbar-default.pull-right.navbar-actions
+				ul
+					li.inline-menu-item
+						a(href="/user/#{objs.user.username}/edit") Editer
+					li.inline-menu-item
+						a(href="/user/#{objs.user.username}") Profil
+	.row
+		.col-md-2
+			.panel.panel-default
+				div.separated
+					img(src="#{session.gravatar}", height="75px")
+				div.separated
+					i.fa.fa-circle.status.online
+					span.small-title(style="margin-left:10px;") #{session.user.username}
+		.col-md-10.panel.panel-default
+			form.form-horizontal
+				.col-md-5
+					.form-group
+						label.control-label(for="username") Username
+						.col-md-12
+							input.form-control(placeholder="Username", name="username", value="#{objs.user.username}", autocomplete="off")
+					.form-group
+						label.control-label(for="username") Email
+						.col-md-12
+							input.form-control(placeholder="Username", name="username", value="", autocomplete="off")
+				.col-md-5
+					.form-group
+						label.control-label(for="username") Password
+						.col-md-12
+							input.form-control(placeholder="Password", name="username", type="password", autocomplete="off")
+					.form-group
+						label.control-label(for="username") Password confirmation
+						.col-md-12
+							input.form-control(placeholder="confirmation", name="username", type="password", autocomplete="off")
+				.col-md-10
+					input.form-control.btn.btn-primary.btn-small(type="submit", value="Save")

@@ -1,0 +1,62 @@
+extends ../../layout
+block content
+	.panel.panel-default
+		form.form-horizontal
+			.col-sm-offset-2.col-sm-10
+				h1(style="padding-bottom: 1em; margin-left: 30%;") Edit a user
+
+			.form-group
+				label.col-sm-2.control-label(for="username") Username
+				.col-sm-10
+					input.form-control(placeholder="Username", value="#{user.username}")
+			.form-group
+				label.col-sm-2.control-label(for="email") Email
+				.col-sm-10
+					input.form-control(placeholder="Email", value="#{user.email}")
+			.form-group
+				label.col-sm-2.control-label Select groups
+				.col-sm-10
+					table.datagrid#groups.table.table-striped.table-bordered
+						thead
+							tr.search
+								th
+								th.disable
+							tr
+								th Group
+								th 
+						tbody
+						tfoot
+							tr
+								th(colspan="2")
+									select.available-groups
+										options
+											option Loading ...
+									button.btn.btn-info.btn-primary.add-group(type="button") add
+			.form-group
+				.col-sm-offset-2.col-sm-10
+					button.btn.btn-success.btn-primary(type="submit") Save
+
+block post-script
+	script.
+		$(function() {
+			Datagrid.load();
+			
+			ajaxify.loadData(function (data){
+				$(".available-groups").empty();
+				$.each(data.groups, function( index, group ) {
+					var optionGroup = $('<option></option>').attr("value", group).text(group);
+					$(".available-groups").append(optionGroup);
+				});
+				$(".add-group").bind("click", function(){
+					Datagrid.appendData("#groups", [$(".available-groups").val(), "Remove"]);
+					$(".available-groups option[value='"+ $(".available-groups").val() +"']").remove();
+				});
+			}, "admin/groups");
+
+			ajaxify.loadData(function (data){
+				$.each(data.groups, function(index, group) {
+					Datagrid.appendData("#groups", [group, "Remove"]);
+				});
+
+			}, "admin/#{user.username}/groups");
+		});

@@ -1,0 +1,8 @@
+extends create
+
+block append post-script
+	script.
+		$("input[name='server']").val("#{server.host}");
+		$("input[name='description']").val("#{server.desc}");
+		$("input[name='port']").val("#{server.port}");
+		console.log("#{server.users}");

@@ -1,0 +1,220 @@
+
+%###################################### Packages and new functions definitions ###########################################%
+%Encoding Package
+\documentclass[11pt]{template}
+\usepackage{pslatex}
+\usepackage[utf8]{inputenc}
+\usepackage[cyr]{aeguill}
+\usepackage{xspace}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{fancybox}
+\usepackage{a4wide}
+\usepackage[toc]{appendix}
+\usepackage{CJK}
+
+\newcommand\japonais[1]{\begin{CJK}{UTF8}{min}#1\end{CJK}}
+\usepackage{color}
+%Type de package de couleur : au choix. Attention n'en choisir qu'un seul à  la fois
+%\usepackage{xcolor}
+%\usepackage[dvipsnames]{xcolor}
+\usepackage[svgnames]{xcolor}
+
+%Packages Algoritmic
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+%Packages Images & graph
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{enumitem}
+\usepackage{pifont}
+
+\frenchbsetup{StandardLists=true}
+
+\graphicspath{{./images/}}
+\bibliographystyle{prsty}
+
+\renewcommand{\algorithmicrequire} {\textbf{\textsc{\textcolor{DarkSlateGray}{In:}}}}
+\renewcommand{\algorithmicensure}  {\textbf{\textsc{\textcolor{DarkSlateGray}{Out:}}}}
+\renewcommand{\algorithmicwhile}   {\textcolor{DarkOrchid}{\textbf{While}}}
+\renewcommand{\algorithmicdo}      {\textcolor{DarkOrchid}{\textbf{Do}}}
+\renewcommand{\algorithmicendwhile}{\textcolor{DarkOrchid}{\textbf{End While}}}
+\renewcommand{\algorithmicend}     {\textcolor{DarkOrchid}{\textbf{End}}}
+\renewcommand{\algorithmicif}      {\textbf{\textcolor{DarkOrchid}{If}}}
+\renewcommand{\algorithmicendif}   {\textcolor{DarkOrchid}{\textbf{End If}}}
+\renewcommand{\algorithmicelse}    {\textcolor{DarkOrchid}{\textbf{Else}}}
+\renewcommand{\algorithmicthen}    {\textcolor{DarkOrchid}{\textbf{Then}}}
+\renewcommand{\algorithmicfor}     {\textbf{\textcolor{DarkOrchid}{For}}}
+\renewcommand{\algorithmicforall}  {\textbf{\textcolor{DarkOrchid}{For All}}}
+\renewcommand{\algorithmicdo}      {\textbf{\textcolor{DarkOrchid}{Do}}}
+\renewcommand{\algorithmicendfor}  {\textbf{\textcolor{DarkOrchid}{End For}}}
+\renewcommand{\algorithmicloop}    {\textbf{\textcolor{DarkOrchid}{Loop}}}
+\renewcommand{\algorithmicendloop} {\textbf{\textcolor{DarkOrchid}{End Loop}}}
+\renewcommand{\algorithmicrepeat}  {\textbf{\textcolor{DarkOrchid}{Repeat}}}
+\renewcommand{\algorithmicuntil}   {\textbf{\textcolor{DarkOrchid}{Until}}}
+\renewcommand{\algorithmicreturn}  {\textbf{\textcolor{DarkOrchid}{return}}}
+\newcommand{\algorithmicelseif}{\textbf{\textcolor{DarkOrchid}{Elsif }}}
+%\floatname{algorithm}{Algorithme}
+\let\mylistof\listof
+\renewcommand\listof[2]{\mylistof{algorithm}{List of algorithm}}
+
+
+
+\makeatletter
+\providecommand*{\toclevel@algorithm}{0}
+\makeatother
+\makeatletter
+\def\clap#1{\hbox to 0pt{\hss #1\hss}}%
+\def\ligne#1{%
+  \hbox to \hsize{%
+    \vbox{\centering #1}}}%
+\def\haut#1#2#3#4{%
+  \hbox to \hsize{%
+    \rlap{\vtop{\centering #1}}%
+    \rlap{\vtop{\centering #2}}%
+    \clap{\vtop{\centering #3}}%
+    \llap{\vtop{\centering #4}}}}%
+\def\bas#1#2#3{%
+  \hbox to \hsize{%
+    \rlap{\vbox{\raggedright #1}}%
+    \hss
+    \clap{\vbox{\centering #2}}%
+    \hss
+    \llap{\vbox{\raggedleft #3}}}}%
+\def\maketitle{%
+  \thispagestyle{empty}\vbox to \vsize{%
+    \haut{}{\@blurb}{}
+    \vfill
+    \vspace{4cm}
+    \ligne{\Large \@title}
+    \vspace{5mm}
+    \ligne{\Large \@author}
+    \vspace{1cm}
+    \vfill
+    \vfill
+    \bas{}{\hspace{20mm} \@licence\newline}{}
+  }%
+  \cleardoublepage
+}
+	\def\date#1{\def\@date{#1}}
+	\def\author#1{\def\@author{#1}}
+	\def\title#1{\def\@title{#1}}
+	\def\licence#1{\def\@licence{#1}}
+	\def\blurb#1{\def\@blurb{#1}}
+	\def\email#1{\def\@email{#1}}
+	\def\logo#1{\def\includegraphics[height=3\baselineskip]{#1}}
+	\date{\today}
+	\author{}
+	\title{}
+	\licence{France}
+	\blurb{}
+	\email{steeve.vandecappelle@gmail.com}
+	\makeatother
+	\title{\begin{Huge}\textcolor{blue}{Documentation de Heimdall v2.0}\end{Huge}}
+	\author{Steeve \textsc{Vandecappelle}}
+	\date{3 juil 2014}
+	\licence{GNU GENERAL PUBLIC LICENSE Version 3}
+	\blurb{
+		\includegraphics[height=3\baselineskip]{heimdall.png}
+	}
+
+
+%#################################################### Beginning document #################################################%
+\begin{document}
+\maketitle
+\newpage
+\strut
+\newpage
+\startcontents[sections]
+%####################################################### Contents ########################################################%
+\section*{Table des matières} 
+\printcontents[sections]{l}{1}{\setcounter{tocdepth}{2}}
+\newpage
+
+%#################################################### Thanks Section #####################################################%
+\section{Introduction}
+Heimdall est une application de gestions de droits d'accès à divers service. La version actuelle ne s'occupe que des accès SSH.
+Il fonctionne comme un bastion regroupant l'ensemble des accès aux serveurs du parc informatique. Il permet ainsi d'autoriser un utilisateur à acceder à un serveur qu'il gère (via échange de clés privées/publiques).
+\\\vspace{2mm}
+Un systeme de réplication de clé permet au ``bastion'' de rendre accessible le serveur en ssh.
+\vspace{15mm}
+Les prérequis pour permettre la réplication sont:\\
+1. Un accès en SSH (via clé RSA) depuis le bastion vers le serveur cible à configurer\\
+2. Un accès à un navigateur web\\
+3. Un client SSH pour donner la possibilité au client de se connecter au serveur configuré.
+
+\newpage
+%################################################### Abstract Section ####################################################%
+\section{Note de version}
+Voici les différentes versions de Heimdall et leurs évolutions.
+\vspace{8mm}\\
+\textbf{v2.0}
+\begin{itemize}[label=\ding{43}]
+\item Passage à NodeJs
+\item Nouveau mode terminal
+\item Passage à redis
+\item Démarrage simplifé
+\item Nouvelle interface plus ergonomique
+\item Optimisations
+\item Internationalisation
+\end{itemize}
+\vspace{10mm}
+\textbf{v1.0} \textbf{\textcolor{red}{La version de ce document}}
+\begin{itemize}[label=\ding{43}]
+\item Mode terminal désactivé au profit d'un mode web
+\item Utilisation de django
+\item Utilisation de celery et rabbit-mq pour gerrer une fille d'attente de traitement
+\item Gestion des utilisateurs / groupes / managers de ressources
+\item Les utilisateurs peuvent eux-même remonter des demandes
+\item Mailer
+\end{itemize}
+\vspace{10mm}
+\textbf{v0.1}
+\begin{itemize}[label=\ding{43}]
+\item Mode terminal
+\item Réplication de clé
+\item Gestion des utilisateurs et groupes en Base SQLLite
+\end{itemize}
+
+\newpage
+\section{Installation}
+\subsection{requirements}
+You need to install first:
+\begin{itemize}[label=\ding{43}]
+\item nodejs > 0.8
+\end{itemize}
+
+\newpage
+\section{Démarrage et arret}
+\subsection{Configuration initiale au premier démarrage}
+Avant de démarrer les services Heimdall pour la première fois il y a quelques configuration a effectuer.\\
+
+\subsection{Démarrage et arret du serveur web}
+
+\newpage
+\section{Formation}
+\subsection{Utilisateurs}
+\subsubsection{Création / modification}
+\subsubsection{Dépot de clés}
+
+\subsection{Groupes}
+\subsubsection{Groupes systemes et groupes de serveurs}
+\subsubsection{Création / modification}
+
+\subsection{Serveurs}
+\subsubsection{Création / modification}
+
+\subsection{Permissions}
+\subsubsection{Faire une demande}
+\subsubsection{Gestion des demandes}
+
+\subsection{Administration}
+
+\newpage
+\section{Opérations de services}
+
+\newpage
+\section{Migration depuis la version antérieure}
+
+\end{document}

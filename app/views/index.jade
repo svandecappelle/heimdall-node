@@ -1,0 +1,43 @@
+extends layout
+block content
+	.pending.panel.panel-default
+		h1= pending
+		table.datagrid.table.table-striped.table-bordered
+			thead
+				tr.search
+					th
+					th
+					th
+					th
+					th
+				tr
+					th= date
+					th= user
+					th= server
+					th= destuser
+					th= comments
+			tbody.servers
+	.statistics.panel.panel-default
+		h1= statistics
+		table.datagrid.stats.table.table-striped.table-bordered
+			thead
+				tr.search
+					th
+					th
+				tr
+					th= key
+					th= value
+			tbody
+				
+block post-script
+	script.
+		$(function() {
+			Datagrid.load();
+			ajaxify.loadData(function (data){
+				var items = [];
+				$.each( data, function( key, val ) {
+					items.push([key, val]);
+				});
+				Datagrid.appendDatas(".stats", items);
+			}, "index");
+		});

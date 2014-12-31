@@ -1,0 +1,8 @@
+{
+  "admin/users/edit": "user/edit",
+  "index": "index",
+  "admin/users/create": "user/create",
+  "admin/users": "admin/users/all",
+  "user/keys": "user/keys",
+  "login": "login"
+}

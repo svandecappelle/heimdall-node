@@ -1,0 +1,25 @@
+{
+    "base_url": "http://192.168.0.34",
+    "port": "4242",
+    "use_port": true,
+    "secret": "eba16c61-18db-471a-9406-6371d7e42f63",
+    "bind_address": "0.0.0.0",
+    "database": "redis",
+    "redis": {
+        "host": "127.0.0.1",
+        "port": "6379",
+        "password": "",
+        "database": "1"
+    },
+    "ssl": {
+        "enabled" : false,
+        "key": "/path",
+        "cert": "/path"
+    },
+    "replicator":{
+        "rsaFile": "~/.ssh/id_rsa"
+    },
+    "bcrypt_rounds": 12,
+    "upload_path": "/uploads",
+    "relative_path": ""
+}

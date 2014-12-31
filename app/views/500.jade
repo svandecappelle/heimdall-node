@@ -1,0 +1,8 @@
+extends layout
+block content
+	.panel.panel-default
+		div.small-title An error uncaught has been occurs.
+		.row.error(style="text-align:left;")
+			.col-md-6.pull-left
+				div= error.message
+				div= error.stack

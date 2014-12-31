@@ -1,0 +1,28 @@
+extends ../layout
+block content
+	.panel.panel-default
+		table.datagrid.table.table-striped.table-bordered#keys
+			thead
+				tr.search
+					th
+					th.disable
+					th.disable
+				tr
+					th Key
+					th Edit
+					th Remove
+			tbody
+	div(style="display: block;")
+		a(class='btn btn-primary' href="/#{session.user.username}/keys/register") Register a key
+block post-script
+	script.
+		$(function() {
+			Datagrid.load();
+			ajaxify.loadData(function (data){
+				var items = [];
+				$.each( data, function( key, val ) {
+					items.push([key, "<a class='btn btn-primary' href='/#{session.user.username}/keys/edit/" + key + "'>Edit</a>", "<a class='btn btn-small btn-remove delete-key' data-confirm='Are you sure?' data-method='delete' href='/#{session.user.username}/keys/delete/" + key + "'>Delete<a/>"]);
+				});
+				Datagrid.appendDatas("#keys", items);
+			}, "#{session.user.username}/keys");
+		});

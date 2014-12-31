@@ -1,0 +1,124 @@
+extends ../../layout
+block content
+	.panel.panel-default
+		form.form-horizontal
+			.col-sm-offset-2.col-sm-10
+				h1(style="padding-bottom: 1em; margin-left: 30%;") Create a group
+
+			.form-group
+				label.col-sm-2.control-label(for="username") Nom du group
+				.col-sm-10
+					input.form-control(placeholder="Group name", name="group")
+			.form-group
+				label.col-sm-2.control-label Select perimeter
+				.col-sm-10
+					table.datagrid#servers.table(name="servers").form-control-table.table-striped.table-bordered
+						thead
+							tr.search
+								th
+								th.disable
+							tr
+								th(name="host") Servers
+								th 
+						tbody
+						tfoot
+							tr
+								th(colspan="2")
+									select.available-servers
+										options
+											option Loading ...
+									button.btn.btn-info.btn-primary.add-server(type="button") add
+			.form-group
+				label.col-sm-2.control-label Select managers
+				.col-sm-10
+					table.datagrid#managers.table(name="managers").form-control-table.table-striped.table-bordered
+						thead
+							tr.search
+								th
+								th.disable
+							tr
+								th(name="username") Manager
+								th 
+						tbody
+						tfoot
+							tr
+								th(colspan="2")
+									select.available-managers
+										options
+											option Loading ...
+									button.btn.btn-info.btn-primary.add-manager(type="button") add
+			.form-group
+				label.col-sm-2.control-label Select members
+				.col-sm-10
+					table.datagrid.table#members(name="members").form-control-table.table-striped.table-bordered
+						thead
+							tr.search
+								th
+								th.disable
+							tr
+								th(name="username") User
+								th 
+						tbody
+						tfoot
+							tr
+								th(colspan="2")
+									select.available-members
+										options
+											option Loading ...
+									button.btn.btn-info.btn-primary.add-member(type="button") add
+			.form-group
+				.col-sm-offset-2.col-sm-10
+					button.btn.btn-success.btn-primary(type="submit") Create
+
+block post-script
+	script.
+		$(function() {
+			Datagrid.load();
+			
+			ajaxify.loadData(function (data){
+				var items = [];
+				$(".available-members").empty();
+				$(".available-managers").empty();
+
+				$.each(data.users, function( key, val ) {
+					items.push("<option>" + val.username + "</option>");
+					var optionMember = $('<option></option>').attr("value", val.username).text(val.username);
+					var optionManager = $('<option></option>').attr("value", val.username).text(val.username);
+					$(".available-members").append(optionMember);
+					$(".available-managers").append(optionManager);
+				});
+				pendingpopup.forceHide();
+
+				$(".add-manager").bind("click", function(){
+					if ($(".available-managers").val()){
+						Datagrid.appendData("#managers", [$(".available-managers").val(), "Remove"]);
+						$(".available-managers option[value='"+ $(".available-managers").val() +"']").remove();
+					}
+				});
+				$(".add-member").bind("click", function(){
+					if ($(".available-members").val()){
+						Datagrid.appendData("#members", [$(".available-members").val(), "<a class='user remove-locally'>Remove</a>"]);
+						$(".available-members option[value='"+ $(".available-members").val() +"']").remove();
+					}
+				});
+			}, "admin/users");
+
+			ajaxify.loadData(function (data){
+				var items = [];
+				$(".available-servers").empty();
+
+				$.each(data.servers, function( index, val ) {
+					items.push("<option>" + val.host + "</option>");
+					var optionServer = $('<option></option>').attr("value", val.host).text(val.host);
+					$(".available-servers").append(optionServer);
+				});
+
+				$(".add-server").bind("click", function(){
+					if ($(".available-servers").val()){
+						Datagrid.appendData("#servers", [$(".available-servers").val(), "Remove"]);
+						$(".available-servers option[value='"+ $(".available-servers").val() +"']").remove();
+					}
+				});
+			}, "admin/servers");
+			var pendingpopup = alertify.log("pending request...");
+		});

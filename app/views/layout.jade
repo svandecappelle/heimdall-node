@@ -1,0 +1,195 @@
+doctype html5
+html
+  head
+    title= title
+    link(rel='shortcut icon', type='image/x-icon',href='/favicon.ico')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/commons/style.css')
+    link(rel='stylesheet', href='/css/tables.css')
+    link(rel='stylesheet', href='/css/pace.css')
+    link(rel='stylesheet', href='/css/alertify/alertify.default.css')
+    link(rel='stylesheet', href='/css/alertify/alertify.core.css')
+    link(rel='stylesheet', href='/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/css/apprise/apprise-v2.css')
+    link(rel='stylesheet', href='/css/jquery.bootstrap-touchspin.min.css')
+    link(rel='stylesheet', href='/css/typeahead/typeahead.css')
+    script(src='/js/jquery/jquery.js')
+    script(src='/js/datatables/jquery.dataTables.min.js')
+    script(src='/js/load.js')
+    script(src='/js/pace.js')
+    script(src='/js/ajaxify.js')
+    script(src='/js/alertify/lib/alertify.js')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/jquery.bootstrap-touchspin.min.js')
+    script(src='/js/apprise/apprise-v2.js')
+    script(src='/js/socket.io/socket.io.js')
+    script(src='/js/chat.js')
+    script(src='/js/typeahead/typeahead.js')
+      
+    body
+      !=body
+        #header.navbar.navbar-default.navbar-fixed-top.header(style="padding-left: 15px;",role="navigation")
+          h1(style="padding-left: 5%;float:left;margin:0px;")
+            a.header-link(href="/") Heimdall
+          span.mini-title(style="float:left") v2.0-beta
+          span.mini-title(style="float:left") The RSA key replicator bastion.
+          //img(src="/img/logo.png")//
+          unless meta.nav.separated
+            div.navbar-header
+              nav.hidden-text.navbar-collapse.collapse.navbar-ex1-collapse(style="float:left")
+                ul.nav.navbar.varbar-nav.pull-left
+                  li.nav-home
+                    a(href="/", title="Acceuil")
+                      i.fa.fa-home
+                      span.text Acceuil
+                  unless session.user.isAnonymous
+                    li.nav-keys
+                        a(href="/#{session.user.username}/keys", title="SSH Keys")
+                          i.fa.fa-key
+                          span.text SSH Keys
+                  li.nav-users
+                      a(href="/admin/users", title="Utilisateurs")
+                        i.fa.fa-users
+                        span.text Utilisateurs
+                  li.nav-groups
+                      a(href="/admin/groups", title="Groupes")
+                        i.fa.fa-sitemap
+                        span.text Groupes
+                  li.nav-groups
+                    a(href="/admin/servers", title="Serveurs")
+                      i.fa.fa-hdd-o
+                      span.text Serveurs
+                  li
+                    a(href="/#{session.user.username}/permissions", title="Accorder une permission")
+                      i.fa.fa-laptop
+                      span.text Permissions
+
+          div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
+            ul
+              unless session.user.isAnonymous
+                li.dropdown(style="float: left;")
+                  a.dropdown-toggle#notif_dropdown(data-toggle="dropdown", data-original-title="Notifications")
+                    i.fa.fa-fw.fa-bell-o(title="Notifications")
+                  ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
+                    if session.notifications.count > 0
+                      li 
+                        a(href="all") Tous
+                      li.divider
+                        each notif in session.notifications.datas
+                          li 
+                            a(href="/notification")= notif
+
+              li.dropdown(style="float: left; margin-left: 5px;")
+                a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
+                  img(src="#{session.gravatar}", width="24px")
+                ul.dropdown-menu(role="menu")
+                  li
+                    if session.user.isAnonymous
+                      a(href="/login") Connection
+                    else
+                      a(href="/user/#{session.user.username}")
+                        i.fa.fa-circle.status.online
+                        span#username(style="margin-left:10px;") #{session.user.username}
+                      a(href="/logout") Deconnection
+                  unless session.user.isAnonymous
+                    li.divider
+                    li
+                      a(href="/user/#{session.user.username}/status/online")
+                        i.fa.fa-circle.status.online
+                        span(style="margin-left:10px;") En ligne
+                    li
+                      a(href="/user/#{session.user.username}/status/away")
+                        i.fa.fa-circle.status.away
+                        span(style="margin-left:10px;") Absent
+                    li
+                      a(href="/user/#{session.user.username}/status/busy")
+                        i.fa.fa-circle.status.busy
+                        span(style="margin-left:10px;") Occupé
+                    li
+                      a(href="/user/#{session.user.username}/status/offline")
+                        i.fa.fa-circle.status.offline
+                        span(style="margin-left:10px;") Hors ligne
+        if meta.nav.separated
+          nav.global
+            div#tabs
+              ul
+                li.nav-home
+                  a(href="/", title="Acceuil")
+                    i.fa.fa-home
+                    span.text Acceuil
+                unless session.user.isAnonymous
+                  li.nav-keys
+                      a(href="/#{session.user.username}/keys", title="SSH Keys")
+                        i.fa.fa-key
+                        span.text SSH Keys
+                li.nav-users
+                    a(href="/admin/users", title="Utilisateurs")
+                      i.fa.fa-users
+                      span.text Utilisateurs
+                li.nav-groups
+                    a(href="/admin/groups", title="Groupes")
+                      i.fa.fa-sitemap
+                      span.text Groupes
+                li.nav-groups
+                  a(href="/admin/servers", title="Serveurs")
+                    i.fa.fa-hdd-o
+                    span.text Serveurs
+                li
+                  a(href="/admin/permissions", title="Accorder une permission")
+                    i.fa.fa-laptop
+                    span.text Permissions
+        main#main-content
+          section#content
+            block content
+        unless session.user.isAnonymous
+          .taskbar.panel.panel-default.navbar.navbar-default.navbar-fixed-bottom.navbar-chat
+            div.nav.navbar-nav.navbar-right.pull-right.chatbar-contacts(style="margin-right:10px;")
+              ul
+                li.dropdown(style="float: left;")
+                  a.dropdown-toggle(data-toggle="dropdown", data-original-title="A user")
+                    i.fa.fa-plus(style="margin-right: 5px;")
+                    span Open a new chat
+                  ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
+                      li 
+                        a.start-chat-link(data-to="all") Tous
+                      li
+                        a.start-chat-link(data-to="administrators") Administrators
+                      li.divider
+                      each user in connected_users
+                        li
+                          a.start-chat-link(data-to="#{user[0]}")
+                            i(class="fa fa-circle status #{user[1]}")
+                            span(style="margin-left:10px;")= user[0]
+              ul.chat-boxes
+              each chat in session.chats
+                li.chat-menu(style="float: left;")
+                  a.show-chat-link
+                    i.fa.fa-circle.status.online(style="margin-right: 5px;")
+                    span chat.touser
+                  .chat-container
+                    .chat.panel.panel-default
+                      h1 Wisper to: chat.touser
+                      input.to(type="hidden", value="#{chat.touser}")
+                      hr
+                      .messages
+                      .separated
+                        textarea.form-control.message
+                      input.btn.btn-primary.btn-small.send(type="submit", value="Send")
+    block post-script
+    unless session.user.isAnonymous
+      script.
+        $(function(){
+          Chat.initialize('#{serverurl}:#{serverport}');
+         $("li.chat-menu>a").click(function () {
+            if ($(this).parent().hasClass("open")){
+              $(this).parent().removeClass('open');
+            }else{ 
+              $(this).parent().addClass('open');
+            }
+          });
+         $(".start-chat-link").click(function(){
+          if ($(".to[value='"+$(this).data("to")+"']").length==0){
+            Chat.create($(this).data("to"));
+          }
+         });
+        });

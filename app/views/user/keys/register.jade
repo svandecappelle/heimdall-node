@@ -1,0 +1,18 @@
+extends ../../layout
+block content
+	.panel.panel-default
+		form.form-horizontal(method="post")
+			.col-sm-offset-2.col-sm-10
+				h1(style="padding-bottom: 1em; margin-left: 30%;") Register an SSH Key
+
+			.form-group
+				label.col-sm-2.control-label(for="username") title
+				.col-sm-10
+					input.form-control(placeholder="Title", name="title")
+			.form-group
+				label.col-sm-2.control-label(for="key") Key
+				.col-sm-10
+					textarea.form-control(rows="6", placeholder="Paste your public key here. Read more about how to generate a key on the SSH help page. ", name="key")
+			.form-group
+				.col-sm-offset-2.col-sm-10
+					button.btn.btn-success.btn-primary(type="submit") Add Key

@@ -1,0 +1,15 @@
+extends create
+
+block append post-script
+	script.
+		$(function() {
+			ajaxify.loadData(function (data){
+				$.each(data.group.members, function( index, val ) {
+					Datagrid.appendData("#members", [val.username, "<a href='/admin/managegroup/member/"+val.username+"/#{groupname}/remove/'>Remove</a>"]);
+				});
+				$.each(data.group.managers, function( index, val ) {
+					Datagrid.appendData("#managers", [val.username, "<a href='/admin/managegroup/manager/"+val.username+"/#{groupname}/remove/'>Remove</a>"]);
+				});
+			}, "admin/group/#{groupname}");
+			$("input[name=group]").val("#{groupname}");
+		});

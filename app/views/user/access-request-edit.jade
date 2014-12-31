@@ -1,0 +1,19 @@
+extends access-request
+
+block append post-script
+	script.
+		$(function() {
+			ajaxify.loadData(function (data){
+				data = data[0];
+				$(".small-title #id").html(data.id);
+				$("input[name='targetuser']").val(data.usertarget);
+				$("input[name='hostname']").val(data.hostname);
+				
+				var comments = [];
+				$.each(data.comments, function( key, val ) {
+					Datagrid.appendData("#comments", [val.date, val.message]);
+				});
+				
+
+			}, "#{username}/permissions/detail/#{id}");
+		});

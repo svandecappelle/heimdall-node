@@ -1,0 +1,36 @@
+extends ../layout
+block content
+	if session.user.username === objs.user.username
+		.col-md-12
+			.navbar.navbar-default.pull-right.navbar-actions
+				ul
+					li.inline-menu-item
+						a(href="/user/#{objs.user.username}/edit") Editer
+					li.inline-menu-item
+						a(href="/user/#{objs.user.username}") Profil
+	.col-md-5
+		.panel.panel-default
+			div.separated
+				img(src="#{session.gravatar}", height="150px")
+			div.separated
+				i.fa.fa-circle.status.online
+				span.small-title(style="margin-left:10px;") #{session.user.username}
+			hr
+			div.separated
+				span.small-title groups
+				each group in objs.groups
+					div #{group}
+	.col-md-7
+		.panel.panel-default
+			span.small-title Permissions
+			hr
+			.permissions
+
+block post-script
+	script(src='/js/d3.min.js')
+	script(src='/js/permission-chart.js')
+	script.
+		$(function() {
+			var graph = new PermissionGraph("/api/#{session.user.username}/permissions.json");
+			graph.load();
+		});

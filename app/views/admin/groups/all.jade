@@ -1,0 +1,29 @@
+extends ../../layout
+block content
+	.panel.panel-default
+		table.datagrid#groups.table.table-striped.table-bordered
+			thead
+				tr.search
+					th
+					th.disable
+				tr
+					th Group
+					th Action
+			tbody.users
+	div
+		a(class='btn btn-primary' href="/admin/groups/create") create a group
+block post-script
+	script.
+		$(function() {
+			Datagrid.load();
+			ajaxify.loadData(function (data){
+				var items = [];
+				$.each( data.groups, function( key, val ) {
+					items.push([val, "<a class='btn btn-primary' href='/admin/groups/edit/"+val+"'>Edit</a>"]);
+				});
+				pendingpopup.forceHide();
+				alertify.success("groups retrieved");
+				Datagrid.appendDatas("#groups", items);
+			}, "admin/groups");
+			var pendingpopup = alertify.log("pending request...");
+		});

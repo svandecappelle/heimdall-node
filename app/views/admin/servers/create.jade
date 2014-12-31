@@ -1,0 +1,88 @@
+extends ../../layout
+block content
+	.panel.panel-default
+		form.form-horizontal
+			.col-sm-offset-2.col-sm-10
+				h1(style="padding-bottom: 1em; margin-left: 30%;") Register a server
+
+			.form-group
+				label.col-sm-2.control-label(for="server") Server hostname
+				.col-sm-4
+					input.form-control(placeholder="Server host", name="server")
+			.form-group
+				label.col-sm-2.control-label(for="description") Description
+				.col-sm-4
+					input.form-control(placeholder="Description", name="description")
+			.form-group
+				label.col-sm-2.control-label(for="port") Port number
+				.col-sm-2
+					input.form-control(placeholde="Port number", name="port")
+			.form-group
+				label.col-sm-2.control-label(for="port") Users configured
+				.col-sm-10
+					table.datagrid#users.table(name="users").table-striped.table-bordered
+						thead
+							tr
+								th User
+								th
+						tbody
+							if user
+								if server
+									for user in server.users
+										tr
+											td #{user}
+											td remove
+			.form-group
+				label.col-sm-2.panel-heading.collapsed(data-toggle="collapse", data-target="#collapseOne", style="text-align:right;") Upload heimdall replicator SSH key
+				.col-sm-10
+					#collapseOne.panel-collapse.collapse
+						.form-horizontal
+							.info(style="margin-top:15px; font-style: italic;")
+								span connections info are not saved in any part of the application.
+							.form-group(style="text-align:left;")
+								label.col-sm-2.control-label(style="text-align:right; float: left;", for="upload") Upload ssh key on server
+								.col-sm-4
+									input#upload(type="checkbox", name="upload")
+
+							table.form-control-table.form-group#newusers(style="text-align:left; border-spacing: 4px; border-collapse: separate;", name="users")
+								thead
+									tr
+										th(name="username")
+											label.col-sm-1.control-label(style="text-align:right; float: left;") User
+										th(name="password")
+											label.col-sm-1.control-label(style="text-align:right; float: left;") Password
+								tbody
+									tr
+										td.input
+											input.form-control.userfields(placeholder="User", autocomplete="off", readonly)
+										td.input
+											input.form-control.userfields(placeholder="Password", type="password", autocomplete="off", readonly)
+							.form-group.col-sm-10
+								button.btn.btn-success.btn-primary#new_user(type="button") Configure new user
+			.form-group
+				.col-sm-offset-2.col-sm-10
+					button.btn.btn-success.btn-primary(type="submit") Register
+
+block post-script
+	script.
+		$(function() {
+			Datagrid.load();
+			
+			$("input[name='port']").TouchSpin({
+				initval: 22,
+				postfix: "Default",
+				min: 0,
+				max: 999999,
+				postfix_extraclass: "btn btn-default default-reinit"
+			});
+			$(".default-reinit").click(function(){
+				$("input[name='port']").val(22);
+			});
+			$("#new_user").click(function(){
+				$("#newusers tbody tr:last").after($("<tr><td class='input'><input class='form-control userfields' placeholder='User' autocomplete='off'></input></td><td class='input'><input class='form-control userfields' placeholder='password' autocomplete='off' type='password'></input></td></tr>"));
+				$(".userfields").attr('readonly', !$('#upload').is(":checked"));
+			});
+			$('#upload').click(function(){
+				$(".userfields").attr('readonly', !$(this).is(":checked"));
+			});
+		});

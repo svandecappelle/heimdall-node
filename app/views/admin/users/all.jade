@@ -1,0 +1,29 @@
+extends ../../layout
+block content
+	.panel.panel-default
+		table.datagrid#users.table.table-striped.table-bordered
+			thead
+				tr.search
+					th
+					th.disable
+				tr
+					th Username
+					th Action
+			tbody.users
+	div
+		a(class='btn btn-primary' href="/admin/user/create") create a user
+block post-script
+	script.
+		$(function() {
+			Datagrid.load();
+			ajaxify.loadData(function (data){
+				var items = [];
+				$.each( data.users, function( key, val ) {
+					items.push([val.username, "<a class='btn btn-primary' href='/admin/users/edit/"+val.username+"'>Edit</a>"]);
+				});
+				pendingpopup.forceHide();
+				alertify.success("users retrieved");
+				Datagrid.appendDatas("#users", items);
+			}, "admin/users");
+			var pendingpopup = alertify.log("pending request...");
+		});

@@ -1,0 +1,20 @@
+[
+
+{"name":"target.user1","color": "#DB7AEE", "imports":["server.server1", "server.server2", "server.server3", "server.server4","server.server5","server.server6","server.server7","server.server8","server.server9","server.server10", "server.server11"]},
+{"name":"target.user2","color": "#DB7AEE", "imports":["server.server1", "server.server2", "server.server7"]},
+{"name":"target.user3","color": "#DB7AEE", "imports":["server.server11", "server.server6"]},
+{"name":"target.user4","color": "#DB7AEE", "imports":["server.server10", "server.server8"]},
+
+{"name":"server.server1","color": "#AEF", "imports":["target.user1", "target.user2"]},
+{"name":"server.server2","color": "#AEF", "imports":["target.user1", "target.user2"]},
+{"name":"server.server3","color": "#AEF", "imports":["target.user1"]},
+{"name":"server.server4","color": "#AEF", "imports":["target.user1"]},
+{"name":"server.server5","color": "#AEF", "imports":["target.user1"]},
+{"name":"server.server6","color": "#AEF", "imports":["target.user1","target.user3"]},
+{"name":"server.server7","color": "#AEF", "imports":["target.user1","target.user2"]},
+{"name":"server.server8","color": "#AEF", "imports":["target.user1","target.user4"]},
+{"name":"server.server9","color": "#AEF", "imports":["target.user1"]},
+{"name":"server.server10","color": "#AEF", "imports":["target.user1","target.user4"]},
+{"name":"server.server11","color": "#AEF", "imports":["target.user1","target.user3"]}
+
+]

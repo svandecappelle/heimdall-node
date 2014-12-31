@@ -1,0 +1,11 @@
+{
+	"get":[
+		":user/keys",
+		"user/:user",
+		"user/:user/edit"
+	],
+	"post":[
+		":user/keys",
+		"user/:user/edit"
+	]
+}

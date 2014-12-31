@@ -1,0 +1,142 @@
+extends ../layout
+block content
+	.panel.panel-default
+		span.small-title My permissions request
+		table.datagrid#my-permissions.table.table-striped.table-bordered
+			thead
+				tr.search
+					th
+					th
+					th
+					th
+					th
+					th.disable
+					th.disable
+					th.disable
+					th.disable
+				tr
+					th Id
+					th Heimdall User
+					th Host user
+					th Server
+					th Last update date
+					th
+					if objs.user.username === session.user.username
+						th
+						th
+						th
+					else if session.user.role === "MANAGER" || session.user.role === "ADMINISTRATOR"
+						th
+						th
+						th
+			tbody.users
+	div
+		a(class='btn btn-primary' href="/#{session.user.username}/permissions/request") Request a new permission
+	if session.user.role === "MANAGER" || session.user.role === "ADMINISTRATOR"
+		hr
+		.panel.panel-default
+			span.small-title User's permissions request
+			table.datagrid#others-permissions.table.table-striped.table-bordered
+				thead
+					tr.search
+						th
+						th
+						th
+						th
+						th
+						th.disable
+						th.disable
+						th.disable
+						th.disable
+					tr
+						th Id
+						th Heimdall User
+						th Host user
+						th Server
+						th Last update date
+						th
+						th
+						th
+						th
+				tbody.users
+		div
+			a(class='btn btn-primary' href="/#{objs.user.username}/permissions/request") Grant a new permission
+
+block post-script
+	script.
+		$(function() {
+			var makeformLine = function(name, data){
+				return '<div class="form-group"><label class="col-sm-2 control-label">' + name + '</label><div class="col-sm-10"><span class="form-control">' + data + '</span></div></div>';
+			};
+
+			var userNameConnected = "";
+
+			loadPermissions("#{objs.user.username}", "my-permissions");
+			loadPermissions("admin", "others-permissions");
+
+			Datagrid.load();
+			
+			function loadPermissions(user, appendTo){
+				ajaxify.loadData(function (data){
+					var objs = {};
+					var items = [];
+					$.each( data, function( key, val ) {
+						console.log(val);
+						objs[val.id] = val;
+
+						if ("#{session.user.username}" === "#{session.user.username}"){
+							items.push([val.id, val.user, val.usertarget, val.hostname, val.lastupdate, "<a class='detail' id='"+val.id+"'>See details</a>", "<a>Accept demand</a>", "<a>Reject demand</a>", "<a href='/"+val.user+"/request/"+val.id+"'>Edit</a>"]);
+						}else if ("#{session.user.role}" === "MANAGER" || "#{session.user.role}" === "ADMINISTRATOR"){
+							items.push([val.id, val.user, val.usertarget, val.hostname, val.lastupdate, "<a class='detail' id='"+val.id+"'>See details</a>", "<a>Accept demand</a>", "<a>Reject demand</a>", "<a href='/"+val.user+"/request/"+val.id+"'>Edit</a>"]);							
+						}else{
+							items.push([val.id, val.user, val.targetuser, val.hostname, val.lastupdate, "<a class='detail' id='"+val.id+"'>See details</a>"]);
+						}
+					});
+					Datagrid.appendDatas("#"+appendTo, items);
+					$("#"+appendTo+" a.detail").click(function(){
+						var id = $(this).attr("id");
+						ajaxify.loadData(function (data){
+							var settings = {
+								animation: 700,	// Animation speed
+								buttons: {
+									confirm: {
+										action: function(response) {
+												response.me.dissapear();
+											}, // Callback function
+										className: null, // Custom class name(s)
+										id: 'confirm', // Element ID
+										text: 'Ok', // Button text
+									}
+								},
+								input: false, // input dialog
+								override: true, // Override browser navigation while Apprise is visible
+							};
+							var user = makeformLine("User", objs[id].user);
+							var targetUser = makeformLine("TargetUser", objs[id].usertarget);
+							var server = makeformLine("Server", objs[id].hostname);
+							var lastupdate = makeformLine("Last update", objs[id].lastupdate);
+							
+							var comments = '<h2>Comments: </h2><table id="comments" class="datagrid table table-striped table-bordered"><thead><tr><th>Date</th><th>Comment</th></tr></thead></table>';
+							
+							var popupDetailContent = '<div><span class="small-title">Detail of ' + id + '</span><div class="form-horizontal">';
+							popupDetailContent += user + targetUser + server + lastupdate + comments;
+							popupDetailContent += '</div></div>';
+							var details = $(popupDetailContent);
+
+							Apprise(details.html(), settings);
+							Datagrid.load("#comments", {
+								"scrollY":        "150px",
+								"scrollCollapse": true,
+								"paging":         false
+							});
+							console.log(data[0].comments);
+							var comments = data[0].comments;
+							$.each(comments, function (index, comment) {
+								Datagrid.appendData("#comments", [comment.date, '['+comment.from+']- '+ comment.message]);
+							});
+
+						}, user+"/permissions/detail/"+id);
+					});
+				}, user+"/permissions/pending");
+			}
+		});

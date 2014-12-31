@@ -1,0 +1,31 @@
+extends ../../layout
+block content
+	.panel.panel-default
+		table.datagrid#servers.table.table-striped.table-bordered
+			thead
+				tr.search
+					th
+					th.disable
+					th.disable
+				tr
+					th Server
+					th Status
+					th Action
+			tbody
+		div
+			a(class='btn btn-primary' href="/admin/servers/create") Register a server
+block post-script
+	script.
+		$(function() {
+			Datagrid.load();
+			ajaxify.loadData(function (data){
+				var items = [];
+				$.each( data.servers, function( index, server ) {
+					items.push([server.host, server.status, "<a class='btn btn-primary' href='/admin/servers/edit/"+server.host+"'>Edit</a>"]);
+				});
+				pendingpopup.forceHide();
+				alertify.success("groups retrieved");
+				Datagrid.appendDatas("#servers", items);
+			}, "admin/servers");
+			var pendingpopup = alertify.log("pending request...");
+		});

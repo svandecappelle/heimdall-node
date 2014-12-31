@@ -1,0 +1,8 @@
+extends register
+
+block post-script
+	script.
+		$(function() {
+			$("input[name='title']").val('#{key.title}');
+			$("textarea[name='key']").val('#{key.value}');
+		});

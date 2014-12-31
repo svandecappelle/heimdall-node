@@ -1,0 +1,78 @@
+extends ../layout
+block content
+	.col-md-12.panel.panel-default
+		form.form-horizontal
+			.col-md-12
+				span.small-title Request
+					span#id(style="padding-left: 0.5em;")
+					hr
+			.col-md-6
+				.form-group
+					label.control-label(for="targetuser") Username
+					.col-md-12
+						input.form-control(placeholder="Target user", name="targetuser", value="", autocomplete="off")
+				.form-group
+					label.control-label(for="hostname") Server
+					.col-md-12
+						input.form-control(placeholder="Server", name="hostname", value="", autocomplete="off")
+				.form-group
+					label.control-label(for="comment") Comment
+					.col-md-12
+						textarea.form-control(placeholder="Comments", name="comment", value="", style="height:130px")
+			.col-md-6
+				.form-group
+					table.datagrid.table.table-striped.table-bordered#comments
+						thead
+							tr.search
+								th
+								th.disable
+							tr
+								th Date
+								th Comment
+						tbody
+			.col-md-12
+				input.form-control.btn.btn-primary.btn-small(type="submit", value="Save")
+block post-script
+	script.
+		$(function() {
+			Datagrid.load();
+				var substringMatcher = function(strs) {
+					return function findMatches(q, cb) {
+					var matches, substrRegex;
+					
+					// an array that will be populated with substring matches
+					matches = [];
+					
+					// regex used to determine if a string contains the substring `q`
+					substrRegex = new RegExp(q, 'i');
+					
+					// iterate through the pool of strings and for any string that
+					// contains the substring `q`, add it to the `matches` array
+					$.each(strs, function(i, str) {
+						if (substrRegex.test(str)) {
+							// the typeahead jQuery plugin expects suggestions to a
+							// JavaScript object, refer to typeahead docs for more info
+							matches.push({ value: str });
+						}
+					});
+					
+					cb(matches);
+				};
+			};
+
+			ajaxify.loadData(function (data){
+				$('input.form-control[name="host"]').typeahead({
+						hint: true,
+						highlight: true,
+						minLength: 1
+					},
+					{
+					name: 'host',
+					displayKey: 'value',
+					source: substringMatcher(data)
+				});
+				$(".twitter-typeahead").width("100%");
+			}, "servers");
+			
+			
+		});

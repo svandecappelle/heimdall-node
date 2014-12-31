@@ -1,0 +1,10 @@
+{
+	"get":[
+		"index",
+		"login",
+		"user/index"
+	],
+	"post":[
+		"login"
+	]
+}
