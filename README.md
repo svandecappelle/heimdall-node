@@ -1,5 +1,11 @@
 # Install dependencies:
-```npm install```
+
+* install redis
+
+* install nodejs dependencies:
+
+```npm install --python=python2.7```
+
 # Run server
 ```node server.js```
 # Configured with the gitlabci runner
