@@ -26,12 +26,11 @@ block content
 								th User
 								th
 						tbody
-							if user
-								if server
-									for user in server.users
-										tr
-											td #{user}
-											td remove
+							if server
+								for user in server.users
+									tr
+										td #{user}
+										td remove
 			.form-group
 				label.col-sm-2.panel-heading.collapsed(data-toggle="collapse", data-target="#collapseOne", style="text-align:right;") Upload heimdall replicator SSH key
 				.col-sm-10

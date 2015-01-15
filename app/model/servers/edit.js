@@ -45,6 +45,9 @@ module.exports = function(Server) {
 								});
 							}
 						});
+					},
+					function(next){
+						Server.replicateKeys(serverData.host, serverData.users, next);
 					}
 				], function(){
 					callback();

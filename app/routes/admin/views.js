@@ -235,7 +235,8 @@ module.exports = function (app, options) {
           host: serverName,
           desc: desc,
           status: undefined,
-          port: port
+          port: port,
+          users: req.body.data.users
         };
 
         servers.create(serverData, function(err){

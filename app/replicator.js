@@ -54,9 +54,15 @@ var logger = require('log4js').getLogger('Replicator'),
 		});
 	};
 
+	Replicator.replicateHeimdall = function(options){
+		var publicKeyFile = nconf.get("replicator").rsaFile.replace("~", process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE)+".pub";
+		var publicKey = require('fs').readFileSync(publicKeyFile);
+		Replicator.replicate(publicKey, options, function(){logger.info("Heimdall key replicated on ".concat(options.host))});
+	};
+
 	Replicator.replicate = function(key, options, callback) {
 		var S = require('string');
-		var remoteCommand = "echo {{key}} >> .ssh/authorized_keys";
+		var remoteCommand = "echo '{{key}}' >> .ssh/authorized_keys";
 		var values = {"key": key};
 		var str = S(remoteCommand).template(values).s;
 
@@ -64,10 +70,10 @@ var logger = require('log4js').getLogger('Replicator'),
 
 		this.connect(options, function(connection){
 			connection.exec(str, function(err, stream) {
-							if (err) throw err;
-							stream.on('exit', function(code, signal) {
-								callback(code, null);
-							});
+						if (err) throw err;
+						stream.on('exit', function(code, signal) {
+							callback(code, null);
+						});
 					});
 		});
 	};

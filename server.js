@@ -12,7 +12,6 @@ function start(){
 
     // LOADING CONFIGURATION FILE
     require("./config").load();
-
     var bodyParser = require('body-parser');
     var session = require('express-session');
     var cookieParser = require('cookie-parser');
@@ -25,6 +24,7 @@ function start(){
     app.use(bodyParser());
     app.use(cookieParser()); // required before session.
     app.use(session({
+        cookie: { maxAge : 3600000 }, //1 Hour
         secret: 'keyboard cat',
         proxy: true // if you do SSL outside of node.
     }));
